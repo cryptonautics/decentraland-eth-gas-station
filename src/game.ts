@@ -1,13 +1,42 @@
+@Component("crystalSineBouncer")
+export class CrystalSineBouncer {
 
+  constructor(initialCrystalPosition: Vector3) {
+    this.initialCrystalPosition = initialCrystalPosition;
+  }
+
+  initialCrystalPosition: Vector3;
+  speed: number = 2.5;
+  elapsedTime: number = 0;
+
+}
+
+
+
+
+let floorMaterial = new Material();
+floorMaterial.albedoColor = new Color4(0.1875, 0.4140625, 0.21875, 1);
+
+let floor = new Entity();
+floor.addComponent(new Transform({
+  position: new Vector3(8, 0, 8),
+  scale: new Vector3(16, 0.1, 16)
+}))
+floor.addComponent(new BoxShape());
+floor.addComponent(floorMaterial);
+
+engine.addEntity(floor);
 
 
 const gasStationEntity = new Entity();
 gasStationEntity.addComponent(new GLTFShape("models/ETHGasStation.glb"));
 gasStationEntity.addComponent(new Transform({
-  position: new Vector3(8, 1, 8)
+  position: new Vector3(8, 1, 8),
+  scale: new Vector3(3, 3, 3)
 }));
 engine.addEntity(gasStationEntity);
 
+gasStationEntity.addComponent(new CrystalSineBouncer(gasStationEntity.getComponent(Transform).position));
 
 const PRICE_TEXT_COLOR = new Color3(0, 0, 0);
 
@@ -258,5 +287,31 @@ const FETCH_EVERY_TIME = 10;
 const myGasPriceFetcher = new GasPriceFetcher(FETCH_EVERY_TIME);
 
 engine.addSystem(new GasPriceFetcherSystem(myGasPriceFetcher));
+
+
+export class CrystalSineBouncerSystem implements ISystem {
+
+  update(dt: number) {
+
+    let sineBouncer = gasStationEntity.getComponent(CrystalSineBouncer);
+    let transform = gasStationEntity.getComponent(Transform);
+
+    sineBouncer.elapsedTime += dt * sineBouncer.speed;
+
+    let newPositionY = 0.25 * Math.sin(sineBouncer.elapsedTime) + 2;
+    let newPosition = new Vector3(sineBouncer.initialCrystalPosition.x, newPositionY, sineBouncer.initialCrystalPosition.z);
+
+    transform.position = newPosition;
+
+    if (sineBouncer.elapsedTime >= (2 * Math.PI)) {
+      sineBouncer.elapsedTime = 0;
+    }
+
+
+  }
+
+}
+
+engine.addSystem(new CrystalSineBouncerSystem());
 
 

@@ -1,18 +1,18 @@
 {
   "display": {
-    "title": "interactive-text",
+    "title": "Cryptonautics EC",
     "favicon": "favicon_asset"
   },
   "contact": {
-    "name": "author-name",
-    "email": ""
+    "name": "cryptonaut",
+    "email": "cryptonautics42@gmail.com"
   },
   "owner": "",
   "scene": {
     "parcels": [
-      "0,0"
+      "82,-19"
     ],
-    "base": "0,0"
+    "base": "82,-19"
   },
   "communications": {
     "type": "webrtc",
